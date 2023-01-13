@@ -11,6 +11,7 @@ contract Roulette {
   mapping (address => uint256) winnings;
   uint8[] payouts;
   uint8[] numberRange;
+  uint public x = 0;
   
   /*
     BetTypes are as follow:
@@ -170,3 +171,4 @@ contract Roulette {
   }
  
 }
+
