@@ -40,7 +40,7 @@ contract Roulette {
   
   constructor() payable {
     creator = payable(msg.sender);
-    necessaryBalance = 0;
+    necessaryBalance = 1000000000000000000;
     nextRoundTimestamp = block.timestamp;
     payouts = [2,3,3,2,2,36];
     numberRange = [1,2,2,1,1,36];
@@ -70,12 +70,12 @@ contract Roulette {
        3 - the option betted is valid (don't bet on 37!)
        4 - the bank has sufficient funds to pay the bet
     */
-    require(msg.value == betAmount);                               // 1
-    require(betType >= 0 && betType <= 5);                         // 2
-    require(number >= 0 && number <= numberRange[betType]);        // 3
-    uint payoutForThisBet = payouts[betType] * msg.value;
+   require(msg.value == betAmount);                               // 1
+   require(betType >= 0 && betType <= 5);                         // 2
+   require(number >= 0 && number <= numberRange[betType]);        // 3
+    uint payoutForThisBet = payouts[betType] * betAmount;
     uint provisionalBalance = necessaryBalance + payoutForThisBet;
-    require(provisionalBalance < address(this).balance);           // 4
+   require(provisionalBalance < address(this).balance);           // 4
     /* we are good to go */
     necessaryBalance += payoutForThisBet;
     bets.push(Bet({
@@ -96,7 +96,7 @@ contract Roulette {
     uint diff = block.difficulty;
     bytes32 hash = blockhash(block.number-1);
     Bet memory lb = bets[bets.length-1];
-    uint number = uint(keccak256(abi.encodePacked(block.timestamp, diff, hash, lb.betType, lb.player, lb.number))) % 37;
+    uint256 number = uint256(keccak256(abi.encodePacked(block.timestamp, diff, hash, lb.betType, lb.player, lb.number))) % 37;
     /* check every bet for this number */
     for (uint i = 0; i < bets.length; i++) {
       bool won = false;
